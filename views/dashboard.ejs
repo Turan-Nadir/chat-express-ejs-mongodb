@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        aside{
+          background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 800px;
+            width: 600px;
+        }
+         main {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(33.33% - 20px);
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+  <aside>
+    <h2>Your Contacts</h2>
+    <ul>
+      <% user.connections.forEach(contact => { %>
+        <li><%= contact.user %> - <%= contact.status %> <% if (contact.status === 'connected') { %>
+          <a href="/chat/<%= user.userName%>/<%= contact.user %>"><button>go to chat</button></a>
+          <form action="/dashboard/<%= user.userName %>/block" method="post">
+            <input type="hidden" name="requestId" value="<%= contact.user %>">
+            <button type="submit">Block <%= contact.user %></button>
+          </form>
+        <% } %></li>
+      <% }); %>
+    </ul>
+  </aside>
+
+  <main>
+    <form action="/dashboard/<%=user.userName%>/sendRequest" method="post">
+      <label for="sendRequestUsername">Send Friend Request:</label>
+      <input type="text" id="sendRequestUsername" name="sendRequestUsername" required>
+      <button type="submit">Send Request</button>
+    </form>
+
+    <h2>Received Friend Requests</h2>
+    <ul>
+      <% user.connectionRequests.forEach(request => { %>
+        <li>
+          <%= request.user.userName %> - <%= request.type %>
+          <% if (request.type === 'received') { %>
+            <form action="/dashboard/<%= user.userName %>/acceptRequest" method="post"> <input type="hidden" name="requestId" value="<%= request._id %>"> <button type="submit">Accept</button></form> <form action="/dashboard/<%= user.userName %>/rejectRequest" method="post"> <input type="hidden" name="requestId" value="<%= request._id %>"><button type="submit">Reject</button></form>
+          <% } %>
+        </li>
+      <% }); %>
+    </ul>
+  </main>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Chat</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #3498db; /* Adjusted to match the dashboard style */
+        }
+        #message-container {
+            max-width: 800px;
+            background-color: #fff;
+            height: 800px;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #message-list {
+            max-height: 700px;
+            overflow-y: auto;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px; /* Adjusted to match the dashboard style */
+            width: 400px;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .sender-message {
+            background-color: #4caf50;
+            color: white;
+            float: right;
+        }
+        .receiver-message {
+            background-color: #3498db; /* Adjusted to match the dashboard style */
+            color: white;
+            float: left;
+        }
+        .time {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+            text-align: right;
+        }
+        #message-form {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #message-form input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #message-form button {
+            width: calc(100% - 16px);
+            padding: 8px;
+            background-color: #3498db; /* Adjusted to match the dashboard style */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db; /* Adjusted to match the dashboard style */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            border-radius: 100%;
+            height: 80px;
+            width: 60;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with <%=receiver.userName%>!</h1>
+    <div id="message-container">
+        <div id="message-list">
+            <% messages.forEach(message => { %>
+                <div class="message <%= message.sender === sender.userName ? 'sender-message' : 'receiver-message' %>">
+                    <p><strong><%= message.sender === sender.userName ? 'Me' : receiver.userName %>:</strong> <%= message.text %></p>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    <form id="message-form" action="/chat/<%= sender.userName %>/<%= receiver.userName %>" method="post">
+        <input value placeholder="Type your message: " type="text" id="text" name="text" required>
+        <button type="submit">Send</button>
+    </form>
+    <div>
+        <a href="/dashboard/<%= sender.userName %>">Go back</a> <a href="/">Log out</a>
+        
+    </div>
+</body>
+</html>
